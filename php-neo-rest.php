@@ -38,6 +38,39 @@ class GraphDatabaseService
 		return $this->base_uri;
 	}
 	
+  public function performTraverse($node_id, $query, $inflate_nodes=true){ 
+		$uri = "{$this->base_uri}node/{$node_id}/traverse/node";
+		$data = array('query'=>$query);
+			
+		list($response, $http_code) = HTTPUtil::jsonPostRequest($uri, $data);
+
+		var_dump($uri);
+		var_dump($query);
+    var_dump($response);
+
+		if ($inflate_nodes && $http_code==200) {
+			// Process results to replace node object with actualy node objects
+			
+			for($i=0;$i<count($response['data']); $i++){
+				for($j=0;$j<count($response['data'][$i]); $j++) {
+					if (is_array($response['data'][$i][$j]) && isset($response['data'][$i][$j]['data'])) {
+						$response['data'][$i][$j] = Node::inflateFromResponse($this, $response['data'][$i][$j]);
+					}
+				}
+			}
+		}		
+				
+		switch ($http_code)
+		{
+			case 200:
+				return $response;
+			case 404:
+				throw new NotFoundException();
+			default:
+				throw new HttpException($http_code);
+		}
+	}
+	
 	public function performCypherQuery($query, $inflate_nodes=true){ 
 		$uri = $this->base_uri.'ext/CypherPlugin/graphdb/execute_query';
 		$data = array('query'=>$query);

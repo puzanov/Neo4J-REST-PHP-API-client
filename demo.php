@@ -65,11 +65,11 @@ dump_node($thirdNode);
 /**
  *	Perform Cypher Query
  */
-$script = 'START a = node('.$secondNode->getId().') MATCH (a)<-->(x) RETURN x';
-$res = $graphDb->performCypherQuery($script);
+
+$traverse['return_filter'] = 'all';
+$res = $graphDb->performTraverse($firstNode->getId(), $traverse);
 
 var_dump($res);
-
 
 /**
  *	A little utility function to display a node
