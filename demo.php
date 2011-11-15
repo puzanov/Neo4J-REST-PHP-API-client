@@ -65,7 +65,7 @@ dump_node($thirdNode);
 /**
  *	Perform Cypher Query
  */
-$script = 'START a = ('.$secondNode->getId().') MATCH (a)<-->(x) RETURN x';
+$script = 'START a = node('.$secondNode->getId().') MATCH (a)<-->(x) RETURN x';
 $res = $graphDb->performCypherQuery($script);
 
 var_dump($res);

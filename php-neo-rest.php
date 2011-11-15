@@ -43,7 +43,10 @@ class GraphDatabaseService
 		$data = array('query'=>$query);
 			
 		list($response, $http_code) = HTTPUtil::jsonPostRequest($uri, $data);
-				
+
+		var_dump($query);
+    var_dump($response);
+
 		if ($inflate_nodes && $http_code==200) {
 			// Process results to replace node object with actualy node objects
 			
